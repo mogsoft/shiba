@@ -1,0 +1,21 @@
+[project]
+name = "shiba"
+version = "0.1.0"
+description = "A set of useful tools, 道具, for development at NAOJ."
+authors = [
+    {name = "Your Name",email = "you@example.com"}
+]
+readme = "README.md"
+requires-python = ">=3.11, < 3.14"
+dependencies = [
+    "paramiko (>=4.0.0,<5.0.0)",
+    "rich[jupyter] (>=14.2.0,<15.0.0)",
+    "toolviper (>=0.0.16,<0.0.17)"
+]
+
+[tool.poetry]
+packages = [{include = "shiba", from = "src"}]
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"

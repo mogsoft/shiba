@@ -8,9 +8,10 @@ authors = [
 readme = "README.md"
 requires-python = ">=3.11, < 3.14"
 dependencies = [
-    "paramiko (>=4.0.0,<5.0.0)",
+    "paramiko (<4.0.0)",
     "rich[jupyter] (>=14.2.0,<15.0.0)",
-    "toolviper (>=0.0.16,<0.0.17)"
+    "toolviper (>=0.0.16,<0.0.17)",
+    "sshtunnel (>=0.4.0,<0.5.0)"
 ]
 
 [tool.poetry]

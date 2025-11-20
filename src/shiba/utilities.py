@@ -1,4 +1,5 @@
 import functools
+import getpass
 import inspect
 import json
 import pathlib
@@ -45,7 +46,10 @@ def credentials(function):
                 kwargs[arg] = config[name][arg]
 
         if password_ is None:
-            raise ValueError("Password is required")
+            logger.info("Please enter password:\n")
+            kwargs["password"] = getpass.getpass(
+                prompt=f"(username={kwargs['username']}): "
+            )
 
         return function(*args, **kwargs)
 

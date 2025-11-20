@@ -1,11 +1,11 @@
 {
   "connect": {
-    "host": "ana01.alma.nao.ac.jp",
+    "hostname": "ana01.alma.nao.ac.jp",
     "username": "joshua.hoskins"
   },
   "forward": {
-    "host": "example.com",
-    "username": "user",
-    "port": "8000"
+    "hostname": "ana01.alma.nao.ac.jp",
+    "username": "joshua.hoskins",
+    "port": 8000
   }
 }

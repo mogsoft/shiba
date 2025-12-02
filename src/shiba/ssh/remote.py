@@ -1,6 +1,9 @@
+import pathlib
+from threading import ExceptHookArgs
 from typing import Union
 
 import paramiko
+import scp
 import toolviper.utils.logger as logger
 
 from shiba.utilities import credentials
@@ -11,7 +14,7 @@ def connect(
     hostname: Union[str, None] = None,
     username: Union[str, None] = None,
     password: Union[str, None] = None,
-) -> Union[paramiko.SSHClient, None]:
+) -> paramiko.SSHClient:
     """
     Connects to a remote host using SSH.
 
@@ -33,7 +36,7 @@ def connect(
 
     else:
         logger.error("The hostname is None ...")
-        return None
+        raise Exception()
 
 
 @credentials
@@ -57,3 +60,68 @@ def forward(
     logger.info(f"Binding to (local address, port): {server.local_bind_address} ...")
 
     return server.local_bind_port
+
+
+@credentials
+def secure_copy(
+    file: str,
+    hostname: Union[str, None] = None,
+    username: Union[str, None] = None,
+    password: Union[str, None] = None,
+):
+    # Find sever file.
+    # file = pathlib.Path(__file__).parent.parent.joinpath("network") / "server.py"
+
+    with connect(hostname, username, password) as client:
+        with scp.SCPClient(client.get_transport()) as scp_:
+            scp_.put(file)
+
+
+@credentials
+def install_server(
+    hostname: Union[str, None] = None,
+    username: Union[str, None] = None,
+    password: Union[str, None] = None,
+):
+    file = str(pathlib.Path(__file__).parent.parent.joinpath("network") / "server.py")
+    secure_copy(file=file, hostname=hostname, username=username, password=password)
+
+
+### Network communication
+
+
+async def handler(websocket):
+    name = await websocket.recv()
+    print(f"<<< {name}")
+
+    greeting = f"Hello {name}!"
+
+    await websocket.send(greeting)
+    print(f">>> {greeting}")
+
+
+async def start_server():
+    from websockets.asyncio.server import serve
+
+    async with serve(handler, "localhost", 8765) as server:
+        await server.serve_forever()
+
+
+def deploy_server():
+    import asyncio
+
+    asyncio.run(start_server())
+
+
+def client():
+    from websockets.sync.client import connect
+
+    uri = "ws://localhost:8765"
+    with connect(uri) as websocket:
+        name = input("What's your name? ")
+
+        websocket.send(name)
+        print(f">>> {name}")
+
+        greeting = websocket.recv()
+        print(f"<<< {greeting}")

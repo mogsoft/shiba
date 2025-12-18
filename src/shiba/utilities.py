@@ -13,12 +13,12 @@ import psutil
 import toolviper.utils.logger as logger
 
 
-def cpu_usage(stop_event, filename, logical=True):
+def cpu_usage(stop_event, filename):
     if filename is None:
         filename = f"cpu_usage_{uuid.uuid4()}.csv"
 
     with open(filename, "w") as csvfile:
-        number_of_cores = psutil.cpu_count(logical=logical)
+        number_of_cores = psutil.cpu_count(logical=True)
 
         core_list = [f"c{core}" for core in range(number_of_cores)]
         writer = csv.writer(csvfile, delimiter=",", lineterminator="\n")
@@ -28,14 +28,14 @@ def cpu_usage(stop_event, filename, logical=True):
             writer.writerow(usage)
 
 
-def monitor(filename=None, logical=True):
+def monitor(filename=None):
     def function_wrapper(function):
         @functools.wraps(function)
         def wrapper(*args, **kwargs):
             stop_event = multiprocessing.Event()
 
             monitor_process = multiprocessing.Process(
-                target=cpu_usage, args=(stop_event, filename, logical)
+                target=cpu_usage, args=(stop_event, filename)
             )
             monitor_process.start()
 

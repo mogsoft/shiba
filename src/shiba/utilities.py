@@ -1,11 +1,54 @@
+import csv
 import functools
 import getpass
 import inspect
 import json
+import multiprocessing
 import pathlib
+import time
 from typing import Union
 
+import psutil
 import toolviper.utils.logger as logger
+
+
+def cpu_usage(stop_event):
+    with open("cpu_usage.csv", "w") as csvfile:
+        number_of_cores = psutil.cpu_count(logical=True)
+
+        core_list = [f"c{core}" for core in range(number_of_cores)]
+        writer = csv.writer(csvfile, delimiter=",", lineterminator="\n")
+        writer.writerow(core_list)
+        while not stop_event.is_set():
+            usage = psutil.cpu_percent(percpu=True, interval=1)
+            writer.writerow(usage)
+
+
+def monitor():
+    def function_wrapper(function):
+        @functools.wraps(function)
+        def wrapper(*args, **kwargs):
+            stop_event = multiprocessing.Event()
+
+            monitor_process = multiprocessing.Process(
+                target=cpu_usage, args=(stop_event,)
+            )
+            monitor_process.start()
+
+            time.sleep(1)
+
+            try:
+                results = function(*args, **kwargs)
+            finally:
+                stop_event.set()
+                monitor_process.join(timeout=1)
+                monitor_process.terminate()
+
+            return results
+
+        return wrapper
+
+    return function_wrapper
 
 
 def load_config() -> Union[dict, None]:

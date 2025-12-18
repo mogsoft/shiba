@@ -1,23 +1,20 @@
 [project]
 name = "shiba"
 version = "0.1.0"
-description = "A set of useful tools, 道具, for development at NAOJ."
+description = ""
 authors = [
-    {name = "Your Name",email = "you@example.com"}
+    {name = "jrhosk",email = "joshua.hoskins@nao.ac.jp"}
 ]
 readme = "README.md"
-requires-python = ">=3.11, < 3.14"
+requires-python = ">=3.12"
 dependencies = [
-    "paramiko (<4.0.0)",
-    "rich[jupyter] (>=14.2.0,<15.0.0)",
-    "toolviper (>=0.0.16,<0.0.17)",
+    "paramiko (>=4.0.0,<5.0.0)",
+    "rich (>=14.2.0,<15.0.0)",
     "sshtunnel (>=0.4.0,<0.5.0)",
     "scp (>=0.15.0,<0.16.0)",
     "websockets (>=15.0.1,<16.0.0)"
 ]
 
-[tool.poetry]
-packages = [{include = "shiba", from = "src"}]
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]

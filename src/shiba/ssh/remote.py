@@ -1,5 +1,4 @@
 import pathlib
-from threading import ExceptHookArgs
 from typing import Union
 
 import paramiko

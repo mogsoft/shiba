@@ -1,3 +1,4 @@
+import uuid
 import csv
 import functools
 import getpass
@@ -12,7 +13,10 @@ import psutil
 import toolviper.utils.logger as logger
 
 
-def cpu_usage(stop_event, filename="cpu_usage.csv", logical=True):
+def cpu_usage(stop_event, filename, logical=True):
+    if filename is None:
+        filename = f"cpu_usage_{uuid.uuid4()}.csv"
+
     with open(filename, "w") as csvfile:
         number_of_cores = psutil.cpu_count(logical=logical)
 

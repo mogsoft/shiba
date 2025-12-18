@@ -12,9 +12,9 @@ import psutil
 import toolviper.utils.logger as logger
 
 
-def cpu_usage(stop_event):
-    with open("cpu_usage.csv", "w") as csvfile:
-        number_of_cores = psutil.cpu_count(logical=True)
+def cpu_usage(stop_event, filename="cpu_usage.csv", logical=True):
+    with open(filename, "w") as csvfile:
+        number_of_cores = psutil.cpu_count(logical=logical)
 
         core_list = [f"c{core}" for core in range(number_of_cores)]
         writer = csv.writer(csvfile, delimiter=",", lineterminator="\n")
@@ -24,14 +24,14 @@ def cpu_usage(stop_event):
             writer.writerow(usage)
 
 
-def monitor():
+def monitor(filename=None, logical=True):
     def function_wrapper(function):
         @functools.wraps(function)
         def wrapper(*args, **kwargs):
             stop_event = multiprocessing.Event()
 
             monitor_process = multiprocessing.Process(
-                target=cpu_usage, args=(stop_event,)
+                target=cpu_usage, args=(stop_event, filename, logical)
             )
             monitor_process.start()
 
@@ -78,7 +78,7 @@ def credentials(function):
 
         for arg, value in arguments.items():
             if value is None:
-                if config_open is False:
+                if not config_open:
                     config = load_config()
 
                     if config is None:

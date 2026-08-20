@@ -1,21 +1,19 @@
 [project]
 name = "shiba"
-version = "0.1.2"
+version = "0.2.0"
 description = ""
 authors = [
     {name = "jrhosk",email = "joshua.hoskins@nao.ac.jp"}
 ]
 readme = "README.md"
-requires-python = "<3.13"
+requires-python = ">3.12"
 dependencies = [
     "paramiko (>=4.0.0,<5.0.0)",
     "rich (>=14.2.0,<15.0.0)",
     "sshtunnel (>=0.4.0,<0.5.0)",
     "scp (>=0.15.0,<0.16.0)",
-    "websockets (>=15.0.1,<16.0.0)"
+    "websockets (>=15.0.1,<16.0.0)",
+    "boto3 (>=1.43.3,<1.43.75)",
+    "ipython",
+    "toolviper"
 ]
-
-
-[build-system]
-requires = ["poetry-core>=2.0.0,<3.0.0"]
-build-backend = "poetry.core.masonry.api"

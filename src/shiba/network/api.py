@@ -49,9 +49,9 @@ class CloudflareClient:
             ValueError: If required credentials are missing.
             ClientError: If client initialization fails.
         """
-        self.account_id = account_id or os.getenv("CLOUDFLARE_ACCOUNT_ID")
-        self.access_key_id = access_key_id or os.getenv("CLOUDFLARE_ACCESS_KEY_ID")
-        self.secret_access_key = secret_access_key or os.getenv("CLOUDFLARE_SECRET_ACCESS_KEY")
+        self.account_id = account_id or os.environ["CLOUDFLARE_ACCOUNT_ID"]
+        self.access_key_id = access_key_id or os.environ["CLOUDFLARE_ACCESS_KEY_ID"]
+        self.secret_access_key = secret_access_key or os.environ["CLOUDFLARE_SECRET_ACCESS_KEY"]
 
         missing_vars = [
             var_name
@@ -85,7 +85,7 @@ class CloudflareClient:
         self,
         file_path: str | pathlib.Path,
         bucket_name: str = DEFAULT_BUCKET_NAME,
-        key: str | None = None,
+        key: str = "",
     ) -> None:
         """Upload a local file to the Cloudflare R2 bucket.
 
@@ -95,14 +95,18 @@ class CloudflareClient:
             key: Destination object key in bucket (defaults to file name).
         """
         path = pathlib.Path(file_path).resolve()
+        console.log(f"[green]Uploading file:[/green] {path}")
+
         if not path.is_file():
             raise FileNotFoundError(f"File not found: {path}")
 
-        object_key = key or path.name
+        object_key = pathlib.Path(key).joinpath(path.name)
+
+
         self.s3_client.upload_file(
             Filename=str(path),
             Bucket=bucket_name,
-            Key=object_key,
+            Key=str(object_key),
         )
 
 
@@ -139,7 +143,7 @@ def load_manifest(manifest: str | pathlib.Path | None = None) -> tuple[pathlib.P
     """Resolve and load the download manifest JSON file.
 
     Args:
-        manifest: Optional explicit path to manifest file.
+        manifest: Optional explicit path to manifest.
 
     Returns:
         Tuple of (manifest_path, manifest_data_dict).
@@ -177,7 +181,7 @@ def upload(
 
     Raises:
         ValueError: If neither `files` nor `directory` is provided.
-        FileNotFoundError: If manifest file does not exist.
+        FileNotFoundError: If manifest does not exist.
     """
     target_files: list[pathlib.Path] = []
 
@@ -219,12 +223,15 @@ def upload(
                 continue
 
             filename = file_path.name
+
             file_meta = metadata.get(filename)
+            if filename.endswith(".zip"):
+                file_meta = metadata.get(filename.split(".zip")[0])
 
             if not file_meta or "path" not in file_meta:
                 console.log(
-                    f"[yellow]File {filename} not found in manifest metadata.[/yellow]\n"
-                    "If it is a new file, add it to the manifest and try again."
+                    f"[yellow]File {filename} not found in manifest metadata.\n"
+                    "If it is a new file, add it to the manifest and try again.[/yellow]"
                 )
                 progress.advance(task)
                 continue

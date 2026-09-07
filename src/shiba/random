@@ -1,0 +1,108 @@
+# Serial
+@task
+def Initialization(*args, **kwargs):
+    logger.info("Initialization ... serial processing")
+    generate_delay(n=1, m=UPPER_DELAY_LIMIT)
+
+# Block 1
+
+# Define image parameters #[field, spw, antenna]
+@task
+def define_image_parameters(*args, **kwargs):
+    logger.info("Define image parameters... [field, spw, antenna]")
+    generate_delay(n=1, m=UPPER_DELAY_LIMIT)
+
+
+# per-antenna stoke #[field, spw, antenna, scan, pol]
+@task
+def per_antenna_stokes(*args, **kwargs):
+    logger.info("Per-antenna stokes ... [field, spw, antenna, scan, pol]")
+    generate_delay(n=1, m=UPPER_DELAY_LIMIT)
+
+
+# per-antenna per polarization (XXYY) #[field, spw, antenna]
+@task
+def per_antenna_polarization_XXYY(*args, **kwargs):
+    logger.info("Per-antenna per polarization XXYY ... [field, spw, antenna]")
+    generate_delay(n=1, m=UPPER_DELAY_LIMIT)
+
+# Generate data array per antenna [field, spw, antenna]
+@task
+def generate_data_array(*args, **kwargs):
+    logger.info("Generate data array for per antenna baseline rms map ... [field, spw, pol]")
+    generate_delay(n=1, m=UPPER_DELAY_LIMIT)
+
+# Compute channel ranges #[field, spw, antenna]
+@task
+def heuristic_plots_per_eb(*args, **kwargs):
+    logger.info("Pre-EB heuristic plotting ... [field, spw, antenna, pol]")
+    generate_delay(n=1, m=UPPER_DELAY_LIMIT)
+
+ ## End block 1
+
+ # Block 2
+
+# Gather per-antenna images per-field, per-spw [field, spw]
+@task
+def gather_per_antenna_processing(*args, **kwargs):
+    logger.info("Gather per antenna images per-field, per-spw ... [field, spw, antenna]")
+    generate_delay(n=1, m=UPPER_DELAY_LIMIT)
+
+# Combine per-antenna images [field, spw, antenna]
+@task
+def combine_per_antenna_stokes(*args, **kwargs):
+    logger.info("Combine per antenna images ... [field, spw, antenna]")
+    generate_delay(n=1, m=UPPER_DELAY_LIMIT)
+
+# Generate data array combine [field, spw, antenna]
+@task
+def generate_data_array_combine(*args, **kwargs):
+    logger.info("Generate data array for combine baseline rms map ... [field, spw, pol]")
+    generate_delay(n=1, m=UPPER_DELAY_LIMIT)
+
+# Compute image sensitivity [field, spw]
+@task
+def compute_image_sensitivity(*args, **kwargs):
+    logger.info("Compute image sensitivity ... [field, spw]")
+    generate_delay(n=1, m=UPPER_DELAY_LIMIT)
+
+# Combine per-antenna per-pol image cubes [field, spw, antenna]
+@task
+def create_image_cubes(*args, **kwargs):
+    logger.info("Combine per-antenna, per-pol image cubes ... [field, spw, antenna]")
+    generate_delay(n=1, m=UPPER_DELAY_LIMIT)
+
+# QA Ananlysis, plot generation for combine image cubes [field, spw]
+@task
+def qa_analysis(*args, **kwargs):
+    logger.info("QA analysis, plot generation for combine image cubes ... [field, spw]")
+    generate_delay(n=1, m=UPPER_DELAY_LIMIT)
+
+## End block 2
+# Block 3
+
+# QA Ananlysis, plot generation for combine image cubes [field, spw]
+@task
+def qa_analysis_combine_images(*args, **kwargs):
+    logger.info("QA analysis, plot generation for combine image cubes ... [field, spw]")
+    generate_delay(n=1, m=UPPER_DELAY_LIMIT)
+
+# QA Ananlysis for per-antenna image cubes [field, spw, antenna]
+@task
+def qa_analysis_per_antenna_images(*args, **kwargs):
+    logger.info("QA Ananlysis for per-antenna image cubes ... [field, spw, antenna]")
+    generate_delay(n=1, m=UPPER_DELAY_LIMIT)
+
+# Generate plots [field, spw, antenna]
+@task
+def generate_plots(*args, **kwargs):
+    logger.info("Generate plots ... [field, spw, antenna]")
+    generate_delay(n=1, m=UPPER_DELAY_LIMIT)
+
+## End block 3
+
+# Weblog rendering [serial]
+@task
+def render_weblog(*args, **kwargs):
+    logger.info("Rendering weblog ... [field, spw]")
+    generate_delay(n=1, m=UPPER_DELAY_LIMIT)
